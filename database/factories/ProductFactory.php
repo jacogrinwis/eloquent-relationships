@@ -26,6 +26,7 @@ class ProductFactory extends Factory
             'description' => $this->faker->sentence,
             'slug' => $this->faker->slug,
             'price' => $this->faker->numberBetween(100, 9999),
+            'cover' => 'storage/products/covers/' . $this->faker->numberBetween(1, 30) . '.jpg',
             'category_id' => Category::inRandomOrder()->first()->id,
         ];
     }

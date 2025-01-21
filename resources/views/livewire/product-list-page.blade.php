@@ -1,10 +1,10 @@
-<div class="container mx-auto">
-    <div class="grid grid-cols-4 gap-6">
-        <aside class="col-span-1 space-y-4">
-            <section>
-                <h3 class="mb-2 text-lg font-semibold">Categories ({{ $filters['categories']->count() }})</h3>
+<div class="container mx-auto my-6 max-w-7xl">
+    <div class="grid grid-cols-4 gap-8">
+        <aside class="col-span-1 space-y-4 text-sm">
+            <section class="rounded p-4 shadow">
+                <h3 class="mb-2 text-lg font-semibold">Categorieën ({{ $filters['categories']->count() }})</h3>
                 @foreach ($filters['categories'] as $category)
-                    <label class="mb-1 flex items-center gap-2">
+                    <label class="mb-2 flex items-center gap-2">
                         <input
                             type="checkbox"
                             value="{{ $category->id }}"
@@ -14,10 +14,10 @@
                     </label>
                 @endforeach
             </section>
-            <section>
-                <h3 class="mb-2 text-lg font-semibold">Colors ({{ $filters['colors']->count() }})</h3>
+            <section class="rounded p-4 shadow">
+                <h3 class="mb-2 text-lg font-semibold">Kleuren ({{ $filters['colors']->count() }})</h3>
                 @foreach ($filters['colors'] as $color)
-                    <label class="mb-1 flex items-center gap-2">
+                    <label class="mb-2 flex items-center gap-2">
                         <input
                             type="checkbox"
                             value="{{ $color->id }}"
@@ -30,10 +30,10 @@
                     </label>
                 @endforeach
             </section>
-            <section>
-                <h3 class="mb-2 text-lg font-semibold">Materials ({{ $filters['materials']->count() }})</h3>
+            <section class="rounded p-4 shadow">
+                <h3 class="mb-2 text-lg font-semibold">Materialen ({{ $filters['materials']->count() }})</h3>
                 @foreach ($filters['materials'] as $material)
-                    <label class="mb-1 flex items-center gap-2">
+                    <label class="mb-2 flex items-center gap-2">
                         <input
                             type="checkbox"
                             value="{{ $material->id }}"
@@ -45,10 +45,15 @@
             </section>
         </aside>
         <main class="col-span-3">
-            <div class="mb-6 grid grid-cols-4 gap-4">
+            <div class="mb-6 grid grid-cols-3 gap-4">
                 @foreach ($products as $product)
-                    <section class="rounded border border-gray-300 p-4">
-                        <h2 class="mb-2 text-lg font-semibold">{{ $product->name }}</h2>
+                    <section class="rounded p-4 shadow">
+                        <img
+                            src="{{ asset($product->cover) }}"
+                            alt="{{ $product->name }}"
+                            class="aspect-square w-full rounded object-cover"
+                        >
+                        <h2 class="mb-2 truncate text-lg font-semibold">{{ $product->name }}</h2>
                         <p>€{{ $product->price }}</p>
                         <p>Category: {{ $product->category->name }}</p>
                         <div>
