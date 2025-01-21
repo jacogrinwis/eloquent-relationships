@@ -30,24 +30,5 @@ class DatabaseSeeder extends Seeder
             MaterialSeeder::class,
             ProductSeeder::class,
         ]);
-
-        Product::factory(20)
-            ->create()
-            ->each(function ($product) {
-                // Attach random colors
-                $product->colors()->attach(
-                    Color::inRandomOrder()->take(rand(1, 3))->pluck('id')
-                );
-
-                // Attach random materials
-                $product->materials()->attach(
-                    Material::inRandomOrder()->take(rand(1, 2))->pluck('id')
-                );
-
-                // Assign a random category
-                $product->category()->associate(
-                    Category::inRandomOrder()->first()
-                )->save();
-            });
     }
 }

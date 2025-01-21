@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('description');
             $table->float('price');
+            $table->foreignId('category_id')->constrained();
             $table->timestamps();
         });
     }

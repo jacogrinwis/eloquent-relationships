@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Color;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class ColorSeeder extends Seeder
 {
@@ -12,6 +14,36 @@ class ColorSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $colors = [
+            'slate',
+            'gray',
+            'zinc',
+            'neutral',
+            'stone',
+            'red',
+            'orange',
+            'amber',
+            'yellow',
+            'lime',
+            'green',
+            'emerald',
+            'teal',
+            'cyan',
+            'sky',
+            'blue',
+            'indigo',
+            'violet',
+            'purple',
+            'fuchsia',
+            'pink',
+            'rose'
+        ];
+
+        foreach ($colors as $color) {
+            Color::create([
+                'name' => ucfirst($color),
+                'slug' => Str::slug($color)
+            ]);
+        }
     }
 }
