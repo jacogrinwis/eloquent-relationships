@@ -36,7 +36,9 @@ class ColorSeeder extends Seeder
             'purple',
             'fuchsia',
             'pink',
-            'rose'
+            'rose',
+            'white',
+            'black',
         ];
 
         foreach ($colors as $color) {
