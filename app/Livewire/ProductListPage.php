@@ -7,6 +7,7 @@ use App\Models\Product;
 use Livewire\Component;
 use App\Models\Category;
 use App\Models\Material;
+use App\Enums\StockStatus;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\WithPagination;
@@ -18,13 +19,12 @@ class ProductListPage extends Component
     public $selectedCategories = [];
     public $selectedColors = [];
     public $selectedMaterials = [];
+    public $selectedStockStatus = [];
 
     public $showAllCategories = false;
     public $showAllColors = false;
     public $showAllMaterials = false;
-
-
-
+    public $showAllStockStatus = false;
 
     #[Url(as: 'categorie', except: '')]
     public string $queryStringCategory = '';
@@ -35,15 +35,17 @@ class ProductListPage extends Component
     #[Url(as: 'materiaal', except: '')]
     public string $queryStringMaterial = '';
 
+    #[Url(as: 'voorraad', except: '')]
+    public string $queryStringStockStatus = '';
+
     #[On('filter-updated')]
     public function handleFilters(array $filters)
     {
-        dd($filters);
-
         match ($filters['type']) {
             'categories' => $this->handleCategories($filters['selected']),
             'colors' => $this->handleColors($filters['selected']),
             'materials' => $this->handleMaterials($filters['selected']),
+            'stock_status' => $this->handleStockStatus($filters['selected']),
         };
     }
 
@@ -69,6 +71,12 @@ class ProductListPage extends Component
         $this->queryStringMaterial = $this->buildQueryString(Material::class, $selected, 'materials');
     }
 
+    private function handleStockStatus($selected)
+    {
+        $this->selectedStockStatus = $selected;
+        $this->queryStringStockStatus = implode(',', $selected);
+    }
+
     private function buildQueryString($model, $ids, $type)
     {
         $slugs = match ($type) {
@@ -80,8 +88,6 @@ class ProductListPage extends Component
         return implode(',', $slugs);
     }
 
-
-
     #[On('filters-updated')]
     public function updateFilters()
     {
@@ -90,17 +96,26 @@ class ProductListPage extends Component
 
     public function updatedSelectedCategories()
     {
+        $this->resetPage();
         $this->handleCategories($this->selectedCategories);
     }
 
     public function updatedSelectedColors()
     {
+        $this->resetPage();
         $this->handleColors($this->selectedColors);
     }
 
     public function updatedSelectedMaterials()
     {
+        $this->resetPage();
         $this->handleMaterials($this->selectedMaterials);
+    }
+
+    public function updatedSelectedStockStatus()
+    {
+        $this->resetPage();
+        $this->handleStockStatus($this->selectedStockStatus);
     }
 
     public function render()
@@ -114,8 +129,10 @@ class ProductListPage extends Component
             })
             ->when($this->selectedMaterials, function ($query) {
                 $query->whereHas('materials', fn($q) => $q->whereIn('materials.id', $this->selectedMaterials));
+            })
+            ->when($this->selectedStockStatus, function ($query) {
+                $query->whereIn('stock_status', $this->selectedStockStatus);
             });
-        // ->orderBy('name');
 
         $filters = [
             'categories' => Category::withCount(['products' => function ($query) {
@@ -144,6 +161,20 @@ class ProductListPage extends Component
                 })
                 ->orderBy('name')
                 ->get(),
+
+            'stock_status' => collect(StockStatus::cases())
+                ->map(function ($status) use ($productsQuery) {
+                    return [
+                        'id' => $status->value,
+                        'name' => $status->label(),
+                        'products_count' => Product::query()
+                            ->when($this->selectedCategories, fn($q) => $q->whereIn('category_id', $this->selectedCategories))
+                            ->when($this->selectedColors, fn($q) => $q->whereHas('colors', fn($q) => $q->whereIn('colors.id', $this->selectedColors)))
+                            ->when($this->selectedMaterials, fn($q) => $q->whereHas('materials', fn($q) => $q->whereIn('materials.id', $this->selectedMaterials)))
+                            ->where('stock_status', $status->value)
+                            ->count()
+                    ];
+                })
         ];
 
         $products = $productsQuery->with(['category', 'colors', 'materials'])
@@ -168,6 +199,10 @@ class ProductListPage extends Component
 
         if (!in_array('materials', $exclude) && $this->selectedMaterials) {
             $query->whereHas('materials', fn($q) => $q->whereIn('materials.id', $this->selectedMaterials));
+        }
+
+        if (!in_array('stock_status', $exclude) && $this->selectedStockStatus) {
+            $query->whereIn('stock_status', $this->selectedStockStatus);
         }
     }
 }

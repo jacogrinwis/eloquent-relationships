@@ -39,6 +39,18 @@ export default {
             `bg-${color}`,
             `text-${color}`,
         ]),
+        "bg-green-100",
+        "bg-green-900",
+        "text-green-800",
+        "text-green-300",
+        "bg-blue-100",
+        "bg-blue-900",
+        "text-blue-800",
+        "text-blue-300",
+        "bg-red-100",
+        "bg-red-900",
+        "text-red-800",
+        "text-red-300",
     ],
     theme: {
         extend: {

@@ -4,7 +4,7 @@
 
             <section
                 x-data="{ open: true }"
-                class="rounded-md border border-gray-300 p-4 shadow-sm"
+                __class="border rounded-md border-gray-300 p-4 shadow-sm"
             >
                 <div class="mb-2 flex items-center justify-between">
                     <h3
@@ -57,7 +57,7 @@
 
             <section
                 x-data="{ open: true }"
-                class="rounded-md border border-gray-300 p-4 shadow-sm"
+                __class="rounded-md border border-gray-300 p-4 shadow-sm"
             >
                 <div class="mb-2 flex items-center justify-between">
                     <h3
@@ -115,7 +115,7 @@
 
             <section
                 x-data="{ open: true }"
-                class="rounded-md border border-gray-300 p-4 shadow-sm"
+                __class="rounded-md border border-gray-300 p-4 shadow-sm"
             >
                 <div class="mb-2 flex items-center justify-between">
                     <h3
@@ -168,22 +168,87 @@
                 </div>
             </section>
 
+            <section
+                x-data="{ open: true }"
+                __class="rounded-md border border-gray-300 p-4 shadow-sm"
+            >
+                <div class="mb-2 flex items-center justify-between">
+                    <h3
+                        class="flex cursor-pointer items-center gap-2 text-lg font-semibold"
+                        @click="open = !open"
+                    >
+                        <span>Voorraad Status ({{ $filters['stock_status']->count() }})</span>
+                        <svg
+                            class="h-5 w-5 transition-transform duration-200"
+                            :class="{ 'rotate-180': open }"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                        >
+                            <path
+                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            />
+                        </svg>
+                    </h3>
+                    @if (count($selectedStockStatus) > 0)
+                        <button
+                            wire:click="$set('selectedStockStatus', [])"
+                            class="text-sm text-red-600 hover:text-red-800"
+                        >
+                            Reset
+                        </button>
+                    @endif
+                </div>
+                <div x-show="open">
+                    @foreach ($filters['stock_status'] as $status)
+                        <label class="mb-2 flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                wire:model.live="selectedStockStatus"
+                                value="{{ $status['id'] }}"
+                                class="h-4 w-4 rounded-md border-gray-300"
+                            >
+                            {{ $status['name'] }} ({{ $status['products_count'] }})
+                        </label>
+                    @endforeach
+                </div>
+            </section>
+
+
         </aside>
         <main class="col-span-3">
-            <div class="mb-6 grid grid-cols-3 gap-4">
+            <div class="mb-6 grid grid-cols-4 gap-4">
                 @foreach ($products as $product)
-                    <section class="rounded-md border border-gray-300 p-4 shadow-sm">
+                    <section
+                        __class="rounded-md border border-gray-300 p-4 shadow-sm"
+                        class="rounded-md p-4 transition-shadow duration-300 hover:shadow-md"
+                    >
                         <img
                             src="{{ asset($product->cover) }}"
                             alt="{{ $product->name }}"
                             class="aspect-square w-full rounded-md object-cover"
                         >
                         <h2 class="mb-2 truncate text-lg font-semibold">{{ $product->name }}</h2>
-                        <p>{{ $product->product_number }}</p>
+                        <p class="text-xs text-gray-500">{{ $product->product_number }}</p>
                         <p>{{ formatPrice($product->price) }}</p>
                         @if ($product->discount)
                             <p class="text-red-600">{{ formatPrice($product->discount_price) }}</p>
                         @endif
+
+                        <span
+                            class="rounded bg-green-200 px-2.5 py-0.5 text-xs font-bold text-green-800 dark:bg-green-900 dark:text-green-300"
+                        >
+                            In voorraad
+                        </span>
+
+                        <livewire:stock-status-component :status="$product->stock_status" />
+
+                        {{-- @if ($product->stock_status)
+                            <p class="text-xs text-green-600">
+                                {{ $product->stock_status->label() }}
+                                <livewire:stock-status-component :status="$product->stock_status" />
+                            </p>
+                        @endif --}}
+
                         <p>Category: {{ $product->category->name }}</p>
                         <div>
                             Colors:

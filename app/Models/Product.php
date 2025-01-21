@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\StockStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
@@ -21,6 +22,10 @@ class Product extends Model
         'weight',
         'stock_status',
         'category_id'
+    ];
+
+    protected $casts = [
+        'stock_status' => StockStatus::class
     ];
 
     public function category()
