@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,11 @@ class ColorFactory extends Factory
      */
     public function definition(): array
     {
+        $name = $this->faker->word;
+
         return [
-            //
+            'name' => $name,
+            'slug' => Str::slug($name),
         ];
     }
 }
