@@ -179,7 +179,11 @@
                             class="aspect-square w-full rounded-md object-cover"
                         >
                         <h2 class="mb-2 truncate text-lg font-semibold">{{ $product->name }}</h2>
+                        <p>{{ $product->product_number }}</p>
                         <p>{{ formatPrice($product->price) }}</p>
+                        @if ($product->discount)
+                            <p class="text-red-600">{{ formatPrice($product->discount_price) }}</p>
+                        @endif
                         <p>Category: {{ $product->category->name }}</p>
                         <div>
                             Colors:

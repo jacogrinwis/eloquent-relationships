@@ -147,7 +147,7 @@ class ProductListPage extends Component
         ];
 
         $products = $productsQuery->with(['category', 'colors', 'materials'])
-            ->select(['id', 'name', 'slug', 'description', 'price', 'cover', 'category_id'])
+            ->select(['id', 'product_number', 'name', 'slug', 'description', 'cover', 'price', 'discount', 'dimensions', 'weight', 'stock_status', 'category_id'])
             ->paginate(12);
 
         return view('livewire.product-list-page', [

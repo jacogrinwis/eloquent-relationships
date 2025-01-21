@@ -14,8 +14,12 @@ class Product extends Model
         'name',
         'slug',
         'description',
-        'price',
         'cover',
+        'price',
+        'discount',
+        'dimensions',
+        'weight',
+        'stock_status',
         'category_id'
     ];
 
@@ -32,5 +36,13 @@ class Product extends Model
     public function materials()
     {
         return $this->belongsToMany(Material::class);
+    }
+
+    public function GetDiscountPriceAttribute()
+    {
+        if ($this->discount > 0) {
+            return $this->price * (1 - $this->discount / 100);
+        }
+        return $this->price;
     }
 }
