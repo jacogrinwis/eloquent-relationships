@@ -233,22 +233,7 @@
                         @if ($product->discount)
                             <p class="text-red-600">{{ formatPrice($product->discount_price) }}</p>
                         @endif
-
-                        <span
-                            class="rounded bg-green-200 px-2.5 py-0.5 text-xs font-bold text-green-800 dark:bg-green-900 dark:text-green-300"
-                        >
-                            In voorraad
-                        </span>
-
                         <livewire:stock-status-component :status="$product->stock_status" />
-
-                        {{-- @if ($product->stock_status)
-                            <p class="text-xs text-green-600">
-                                {{ $product->stock_status->label() }}
-                                <livewire:stock-status-component :status="$product->stock_status" />
-                            </p>
-                        @endif --}}
-
                         <p>Category: {{ $product->category->name }}</p>
                         <div>
                             Colors:

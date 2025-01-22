@@ -4,11 +4,11 @@
     </span>
 
     @if ($status === 2)
-        {{-- <a
+        <a
             href="#"
             class="ml-2 text-xs font-bold text-blue-800 underline"
         >
             {{ $statusData['info'] }}
-        </a> --}}
+        </a>
     @endif
 </div>
